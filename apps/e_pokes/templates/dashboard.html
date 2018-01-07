@@ -1,0 +1,50 @@
+<html lang="en">
+        <head>
+            <title>Pokes</title>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            {% load staticfiles %}
+            <link href="{% static 'review/style.css' %}" rel="stylesheet">
+        </head>
+        <body>
+            <header>
+                <h2>Welcome {{user.first_name}}!</h2>
+                <p><a href="/logout">Logout</a></p>
+               
+            </header>
+            {% for total_poker in total_pokers %}
+            <h2>{{total_poker.counter}} person/people poked you!</h2>
+            {% endfor %}
+
+            <div id="box">
+                {% for poke in my_pokes %}
+                <p>{{poke.sender.alias}} gave you {{poke.pokes}} pokes(s).</p>
+                {% endfor %}
+            </div>
+            <h3>People you may want to poke:</h3>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Alias</th>
+                    <th>Email Address</th>
+                    <th>Poke History</th>
+                    <th>Action</th>
+                </tr>
+                {% for other_user in all_pokes %}
+                <tr>
+                    <td>{{other_user.first_name}}</td>
+                    <td>{{other_user.alias}}</td>
+                    <td>{{other_user.email}}</td>
+                    <td>{{other_user.counter}}</td>
+                    <td>
+                        <form action="/poke_someone" method="POST">
+                            {% csrf_token %}
+                            <input type="hidden" name="receiver" value="{{other_user.id}}">
+                            <input type="submit" value="Poke!">
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </body>
+    </html>
